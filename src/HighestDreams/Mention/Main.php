@@ -22,19 +22,11 @@ class Main extends PluginBase implements Listener {
      */
     public function onMention(PlayerChatEvent $event)
     {
-        $sender = $event->getPlayer();
-        $msg = $event->getMessage();
-        $msg = explode(' ', strtolower($msg));
+        $message = $event->getMessage() . " ";
         foreach ($this->getServer()->getOnlinePlayers() as $player) {
-            if ($sender->getName() !== $player->getName()) {
-                if (in_array($playerName = strtolower($player->getName()), $msg)) {
-                    $msg = str_replace($playerName, TF::GREEN . $player->getName() . TF::RESET, $msg);
-                    $player->getLevel()->addSound(new ClickSound($player));
-                    $player->sendTip(TF::BOLD . TF::GREEN . 'New mentioned message');
-                }
-            }
+            if (preg_match($pattern = "/(@*)" . $player->getName() . "+( |-|,|\.|:|\/|\||\\|;)/i", $message))
+                strtolower($player->getName()) !== strtolower($event->getPlayer()->getName()) ? $message = preg_replace($pattern, TF::GREEN . $player->getName() . " " . TF::RESET, $message) and $player->getLevel()->addSound(new ClickSound($player)) and $player->sendTip(TF::BOLD . TF::GREEN . 'New mentioned message') : NULL;
         }
-        $msg = implode(' ', $msg);
-        $event->setMessage($msg);
+        $event->setMessage($message);
     }
 }
