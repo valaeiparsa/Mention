@@ -1,0 +1,7 @@
+---
+name: Mention
+author: HighestDreams
+version: 1.0.0
+main: HighestDreams\Mention\Main
+api: 3.0.0
+...
